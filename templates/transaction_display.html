@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Transactions</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Include your custom styles.css here -->
+</head>
+<style>
+    /* Fade-in animation */
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+        opacity: 1;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Fade-out animation */
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    .fade-out {
+        animation-name: fadeOut;
+        animation-timing-function: ease-out;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+    }
+
+    /* Interactivity styles */
+    button:hover,
+    .dropdown:hover,
+    a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    /* New Section Styles */
+    .new-section {
+        padding: 20px;
+        background: rgba(24, 46, 48, 0.574);
+        border-radius: 8px;
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    }
+
+
+    nav.bg-green-700 {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        /* example box shadow */
+    }
+</style>
+
+<body class="bg-green-900 text-white dark:bg-gray-800 dark:text-gray-100 fade-in">
+    <!-- Navigation -->
+    <nav class="bg-green-700 p-4 text-white">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-semibold">FinTrack - Dashboard</h1>
+                <div class="ml-4 cursor-pointer" id="menu-toggle">
+                    <span class="bar h-1 w-6 bg-white mb-1"></span>
+                    <span class="bar h-1 w-6 bg-white mb-1"></span>
+                    <span class="bar h-1 w-6 bg-white"></span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <!-- Navbar Dropdown Menu -->
+                <div class="relative inline-block text-left dropdown">
+                    <button id="dropdown-button"
+                        class="hover:bg-green-800 text-white font-semibold px-4 py-2 rounded-full">
+                        Menu
+                        <i class="fas fa-caret-down ml-2"></i>
+                    </button>
+                    <div id="dropdown-menu"
+                        class="hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white z-10">
+                        <ul class="py-1">
+                            <li><a href="{{ url_for('dashboard') }}"
+                                    class="block px-4 py-2 text-gray-800 hover:bg-green-100">Dashboard</a></li>
+                            <li><a href="{{ url_for('transaction_display') }}"
+                                    class="block px-4 py-2 text-gray-800 hover:bg-green-100">Transactions</a>
+                            </li>
+                            <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-100">Budgets</a></li>
+                            <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-100">Reports</a></li>
+                            <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-100">Settings</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Logout and Account Links -->
+                <div class="flex space-x-4">
+                    <a class="text-white" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+                    <a class="text-white" href="{{ url_for('account') }}"><i class="fas fa-user"></i></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Centered Content -->
+    <div class="container mx-auto py-8 text-center">
+        <!-- Transactions Area -->
+        <div class="new-section mt-8">
+            <h3 class="bg-green-800 p-4 rounded text-xl font-semibold mb-4">All Transactions</h3>
+            <!-- Category Filter Buttons -->
+            <div id="category-buttons" class="flex justify-center space-x-4 mb-4" class="bg-green-700 hover:bg-green-800 text-white font-semibold px-4 py-2 rounded"
+                    data-category="All">Below are your transactions</button>
+                <!-- Add more category buttons dynamically based on your data -->
+            </div>
+
+            <!-- Scrollable List of Transactions -->
+            <div id="transaction-list" class="max-h-96 overflow-y-auto">
+                <!-- Transactions will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const transactionList = document.getElementById("transaction-list");
+        const categoryButtons = document.querySelectorAll("#category-buttons button");
+
+        // Function to fetch and display transactions based on category filter
+        function fetchAndDisplayTransactions(category) {
+            // Clear the existing transactions
+            transactionList.innerHTML = "";
+
+            // Fetch data from the /transactions endpoint
+            fetch(`/transactions?category=${category}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Process and display the transactions
+                    if (data && data.added && data.added.length > 0) {
+                        data.added.forEach(transaction => {
+                            const listItem = document.createElement("div");
+                            listItem.classList.add("bg-green-800", "p-4", "rounded", "mb-4");
+
+                            listItem.innerHTML = `
+                                <strong>Merchant:</strong> ${transaction.merchant_name}<br>
+                                <strong>Amount:</strong> $${transaction.amount.toFixed(2)}<br>
+                                <strong>Date:</strong> ${transaction.date}<br>
+                                <strong>Category:</strong> ${transaction.category.join(", ")}<br>
+                            `;
+                            transactionList.appendChild(listItem);
+                        });
+                    } else {
+                        const noTransactionsMessage = document.createElement("p");
+                        noTransactionsMessage.textContent = "No transactions available.";
+                        transactionList.appendChild(noTransactionsMessage);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                });
+        }
+
+        // Initial load: Display all transactions
+        fetchAndDisplayTransactions("All");
+
+        // Attach click event listeners to category filter buttons
+        categoryButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const selectedCategory = button.getAttribute("data-category");
+                fetchAndDisplayTransactions(selectedCategory);
+            });
+        });
+
+        const dropdownButton = document.getElementById('dropdown-button');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        dropdownButton.addEventListener('click', function () {
+            dropdownMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+
+</html>

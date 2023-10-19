@@ -1,0 +1,92 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0; /* Light mode background color */
+    color: #333;
+}
+
+/* Navbar styles */
+.navbar {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.logo {
+    font-size: 24px;
+}
+
+.theme-toggle {
+    display: flex;
+    gap: 10px;
+}
+
+.theme-button {
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-icons a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 24px;
+    margin-left: 10px;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 250px;
+    background-color: #222;
+    color: #fff;
+    padding-top: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 10px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    font-size: 18px;
+}
+
+.sidebar a:hover {
+    background-color: #333;
+}
+
+/* Main content styles */
+.dashboard {
+    display: flex;
+}
+
+.section {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Dark mode styles */
+.dark-mode {
+    background-color: #222 !important;
+    color: #fff !important;
+}
+
+/* Add your additional CSS styles as needed */

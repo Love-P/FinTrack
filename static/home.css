@@ -1,0 +1,179 @@
+/* Reset styles for consistent styling */
+/* Reset styles for consistent styling */
+*, html, body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main body styles */
+body {
+    position: relative;
+    background-color: #333333; /* Dark background color */
+    display: grid;
+    height: 100vh;
+    place-items: center;
+    align-items: center;
+}
+
+/* Animated background styles */
+body::before {
+    z-index: -1;
+    animation: anim 30s infinite;
+    background: radial-gradient(circle at 0% 0%, #662E9B, #333333); /* Dark shades */
+    border-radius: 30% 70% 53% 47% / 26% 46% 54% 74%;
+    box-shadow: 0 -2vmin 4vmin #662E9B inset, 0 1vmin 4vmin #4C278F inset,
+        0 -2vmin 7vmin #4C278F inset;
+    content: "";
+    filter: drop-shadow(0 0 3vmin #48217B) drop-shadow(0 5vmin 4vmin #4C278F)
+        drop-shadow(2vmin -2vmin 15vmin #5C3B87)
+        drop-shadow(0 0 7vmin #5C3B87);
+    height: 50vmin;
+    position: absolute;
+    width: 50vmin;
+}
+
+@keyframes anim {
+	0%,
+	100% {
+		border-radius: 30% 70% 70% 30% / 30% 52% 48% 70%;
+		box-shadow: 0 -2vmin 4vmin LightPink inset, 0 -4vmin 4vmin MediumPurple inset,
+			0 -2vmin 7vmin purple inset;
+	}
+
+	10% {
+		border-radius: 50% 50% 20% 80% / 25% 80% 20% 75%;
+	}
+
+	20% {
+		border-radius: 67% 33% 47% 53% / 37% 20% 80% 63%;
+	}
+
+	30% {
+		border-radius: 39% 61% 47% 53% / 37% 40% 60% 63%;
+		box-shadow: 0 -4vmin 8vmin hotpink inset, -1vmin -2vmin 6vmin LightPink inset,
+			-1vmin -2vmin 4vmin MediumPurple inset, 1vmin 4vmin 8vmin purple inset;
+	}
+
+	40% {
+		border-radius: 39% 61% 82% 18% / 74% 40% 60% 26%;
+	}
+
+	50% {
+		border-radius: 100%;
+		box-shadow: 0 4vmin 16vmin hotpink inset, 0 2vmin 5vmin LightPink inset, 0 4vmin 4vmin MediumPurple inset,
+			0 6vmin 8vmin purple inset;
+	}
+
+	60% {
+		border-radius: 50% 50% 53% 47% / 72% 69% 31% 28%;
+	}
+
+	70% {
+		border-radius: 50% 50% 53% 47% / 26% 22% 78% 74%;
+		box-shadow: 1vmin 1vmin 8vmin LightPink inset,
+			2vmin -1vmin 4vmin MediumPurple inset, -1vmin -1vmin 16vmin purple inset;
+	}
+
+	80% {
+		border-radius: 50% 50% 53% 47% / 26% 69% 31% 74%;
+	}
+
+	90% {
+		border-radius: 20% 80% 20% 80% / 20% 80% 20% 80%;
+	}
+}
+
+*,
+*:before,
+*:after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #080710;
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.background .shape {
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(#1845ad, #23a2f6);
+    opacity: 0.5;
+}
+
+.shape:first-child {
+    left: -80px;
+    top: -80px;
+}
+
+.shape:last-child {
+    background: linear-gradient(to right, #ff512f, #f09819);
+    right: -30px;
+    bottom: -80px;
+}
+
+.content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.container {
+    max-width: 600px;
+    padding: 20px;
+}
+
+.header {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.subheader {
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 30px;
+}
+
+/* Add this to your existing CSS */
+.action-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #FFA07A; /* Dark peach color */
+    font-size: 16px;
+    font-weight: 500;
+    border: 2px solid #FFA07A; /* Dark peach color */
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    background-color: #FFA07A; /* Dark peach color on hover */
+    color: #fff;
+    transform: scale(1.05);
+    border-color: #FF6347; /* Even darker peach color on hover */
+}

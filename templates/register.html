@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <title>Registration Form</title>
+</head>
+<body>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+  <div class="container">
+    <form method="POST" action="">
+      {{ form.hidden_tag() }}
+      <h2>Registration Form</h2>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+          {% endfor %}
+        </div>
+        <script>
+            setTimeout(function() {
+              document.querySelector('.flash-messages').style.display = 'none';
+            }, 5000); // Hides Flash Message after 5 seconds
+          </script>
+      {% endif %}
+      {% endwith %}
+      <div class="form-group">
+        {{ form.username.label() }}
+        {{ form.username(class="form-control") }}
+        {% for error in form.username.errors %}
+          <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.email.label() }}
+        {{ form.email(class="form-control") }}
+        {% for error in form.email.errors %}
+          <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.password.label() }}
+        {{ form.password(class="form-control") }}
+        {% for error in form.password.errors %}
+          <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.confirm_password.label() }}
+        {{ form.confirm_password(class="form-control") }}
+        {% for error in form.confirm_password.errors %}
+          <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
+      <a class="login-button" href="{{ url_for('login') }}">Already Have an Account?</a>
+    </form>
+  </div>
+  <div>
+  </div>
+</body>
+</html>

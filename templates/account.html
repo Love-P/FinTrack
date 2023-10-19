@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Account</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Include your custom styles.css here -->
+</head>
+
+<body class="bg-green-900 text-white dark:bg-gray-800 dark:text-gray-100 fade-in">
+    <!-- Navigation -->
+    <nav class="bg-green-700 p-4 text-white">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-semibold">FinTrack - Account</h1>
+                <div class="ml-4 cursor-pointer" id="menu-toggle">
+                    <span class="bar h-1 w-6 bg-white mb-1"></span>
+                    <span class="bar h-1 w-6 bg-white mb-1"></span>
+                    <span class="bar h-1 w-6 bg-white"></span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <!-- Navbar Dropdown Menu -->
+                <div class="relative inline-block text-left dropdown">
+                    <button id="dropdown-button"
+                        class="hover:bg-green-800 text-white font-semibold px-4 py-2 rounded-full">
+                        Menu
+                        <i class="fas fa-caret-down ml-2"></i>
+                    </button>
+                    <div id="dropdown-menu"
+                        class="hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white z-10">
+                        <ul class="py-1">
+                            <li><a href="{{ url_for('dashboard') }}"
+                                    class="block px-4 py-2 text-gray-800 hover:bg-green-100">Dashboard</a></li>
+                            <li><a href="{{ url_for('transaction_display') }}"
+                                    class="block px-4 py-2 text-gray-800 hover:bg-green-100">Transactions</a>
+                            </li>
+                            <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-100">Budgets</a></li>
+                            <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-100">Reports</a></li>
+                            <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-100">Settings</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Logout and Account Links -->
+                <div class="flex space-x-4">
+                    <a class="text-white" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+                </div>
+            </div>
+    </nav>
+
+    <!-- Centered Content -->
+    <div class="container mx-auto py-8 text-center">
+        <!-- Account Details Area -->
+        <div class="new-section mt-8">
+            <!-- Title -->
+            <h3 class="bg-green-800 p-4 rounded text-xl font-semibold mb-4">Account Details</h3>
+
+            <!-- User Information -->
+            <div class="bg-green-800 p-4 rounded mb-4">
+                <strong>Username:</strong> {{ user.username }}<br>
+                <strong>Email:</strong> {{ user.email }}<br>
+                <!-- Add more user information fields as needed -->
+            </div>
+
+            <!-- Password Change Form (if needed) -->
+            <form action="/change_password" method="POST" class="bg-green-800 p-4 rounded mb-4">
+                <h4 class="text-lg font-semibold mb-2">Change Password</h4>
+                <label for="current_password" class="block text-white">Current Password:</label>
+                <input type="password" id="current_password" name="current_password" class="w-full p-2 rounded mb-2"
+                    required>
+                <label for="new_password" class="block text-white">New Password:</label>
+                <input type="password" id="new_password" name="new_password" class="w-full p-2 rounded mb-2" required>
+                <label for="confirm_new_password" class="block text-white">Confirm New Password:</label>
+                <input type="password" id="confirm_new_password" name="confirm_new_password"
+                    class="w-full p-2 rounded mb-2" required>
+                <button type="submit"
+                    class="bg-green-700 hover:bg-green-800 text-white font-semibold px-4 py-2 rounded">Change
+                    Password</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        const dropdownButton = document.getElementById('dropdown-button');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        dropdownButton.addEventListener('click', function () {
+            dropdownMenu.classList.toggle('hidden');
+        }); // Add this closing brace
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Fintrack Dashboard</title>
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+</head>
+
+<style>
+    /* Fade-in animation */
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+        opacity: 1;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Fade-out animation */
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    .fade-out {
+        animation-name: fadeOut;
+        animation-timing-function: ease-out;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+    }
+
+    /* Interactivity styles */
+    button:hover,
+    .dropdown:hover,
+    a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    #notification {
+        width: 300px;
+        /* Specific width for the notification */
+        border: 2px solid black;
+        background: rgb(0, 0, 0);
+        color: rgb(255, 253, 253);
+        padding: 10px 20px;
+        border-radius: 8px;
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        margin: 10px;
+        text-align: center;
+        position: fixed;
+        /* Keeps the notification at the bottom-right, irrespective of scroll */
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        /* Use Flexbox for alignment */
+        align-items: center;
+        /* Align vertically */
+        justify-content: space-between;
+        /* Put space between the bell icon and text */
+    }
+
+    /* New Section Styles */
+    .new-section {
+        padding: 20px;
+        background: rgba(24, 46, 48, 0.574);
+        border-radius: 8px;
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Placeholder styles */
+    .placeholder-section {
+        background: rgba(40, 57, 75, 0.8);
+        /* Slightly darker than new-section */
+    }
+
+    nav.bg-green-700 {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        /* example box shadow */
+    }
+</style>
+
+<body class="bg-green-900 text-white dark:bg-gray-800 dark:text-gray-100 fade-in">
+    <!-- Navigation -->
+    <nav class="bg-green-700 p-4 text-white">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-semibold">FinTrack - Dashboard</h1>
+                <div class="ml-4 cursor-pointer" id="menu-toggle">
+                    <span class="bar h-1 w-6 bg-white mb-1"></span>
+                    <span class="bar h-1 w-6 bg-white mb-1"></span>
+                    <span class="bar h-1 w-6 bg-white"></span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button id="link-button"
+                    class="bg-green-700 hover:bg-green-800 text-white font-semibold px-4 py-2 rounded">
+                    Connect to a bank
+                </button>
+                <!-- Navbar Dropdown Menu -->
+                <div class="relative inline-block text-left dropdown">
+                    <button id="dropdown-button"
+                        class="hover:bg-green-800 text-white font-semibold px-4 py-2 rounded-full">
+                        Menu
+                        <i class="fas fa-caret-down ml-2"></i>
+                    </button>
+                    <div id="dropdown-menu"
+                        class="hidden absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white z-10">
+                        <ul class="py-1">
+                            <li><a href="{{ url_for('dashboard') }}"
+                                    class="block px-4 py-2 text-gray-800 hover:bg-green-100">Dashboard</a></li>
+                            <li><a href="{{ url_for('transaction_display') }}" class="block px-4 py-2 text-gray-800 hover:bg-green-100">Transactions</a>
+                            </li>
+                            <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-100">Budgets</a></li>
+                            <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-100">Reports</a></li>
+                            <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-100">Settings</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Logout and Account Links -->
+                <div class="flex space-x-4">
+                    <a class="text-white" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+                    <a class="text-white" href="{{ url_for('account') }}"><i class="fas fa-user"></i></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+    <!-- Overlay -->
+    <div class="overlay fixed inset-0 bg-black opacity-50 hidden"></div>
+
+    <!-- Centered Content -->
+    <div class="container mx-auto py-8 text-center">
+        <!-- Notification Area -->
+        <div id="notification"
+            class="fixed bottom-0 left-0 right-0 p-4 mb-4 text-black border border-black bg-white rounded shadow hidden fade-out">
+        </div>
+        <div id="accounts-display" class="container mx-auto py-8 text-center">
+            <div class="new-section mt-8">
+                <h3 class="bg-green-800 p-4 rounded text-xl font-semibold mb-4">Connected Bank Accounts</h3>
+
+                <!-- Placeholder Box -->
+                <div id="placeholder-box" class="mb-4 text-center">
+                    Here you will see your bank account information. If you don't see it, please connect to your bank.
+                </div>
+                <ul id="accounts-list"></ul>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        let logoutURL = "{{ url_for('logout') }}";
+        document.querySelector('a[href="' + logoutURL + '"]').addEventListener('click', function (event) {
+            clearAccountsData();
+        });
+
+        function clearAccountsData() {
+            // Clear account data from local storage
+            localStorage.removeItem('accounts');
+
+            // Hide accounts if they are displayed
+            document.getElementById('accounts-display').classList.add('hidden');
+        }
+    </script>
+
+
+    <!-- JavaScript Logic -->
+    <script>
+        function displayAccounts() {
+            const accountsData = JSON.parse(localStorage.getItem('accounts'));
+            const notificationEl = document.getElementById('notification'); // Added this line
+
+            if (accountsData && accountsData.length) {
+                renderAccounts(accountsData);
+            } else {
+                fetch('/accounts')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.accounts && data.accounts.length) {
+                            localStorage.setItem('accounts', JSON.stringify(data.accounts));
+                            renderAccounts(data.accounts);
+                        } else {
+                            placeholderBox.textContent = 'No accounts found.';
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error fetching accounts:', err);
+                        displayMessage('Failed to fetch accounts.', true);
+                        // Add code to hide the error message after 3 seconds
+                        setTimeout(() => {
+                            notificationEl.classList.add('fade-out');
+                            setTimeout(() => {
+                                notificationEl.classList.add('hidden');
+                            }, 1000);
+                        }, 3000);
+                    });
+            }
+        }
+        function renderAccounts(accounts) {
+            const accountsListEl = document.getElementById('accounts-list');
+            const placeholderBox = document.getElementById('placeholder-box');
+            accountsListEl.innerHTML = ""; // Clear any existing entries
+
+            accounts.forEach(account => {
+                const accountBox = document.createElement('div');
+                accountBox.className = 'bg-green-800 p-4 rounded mb-4';
+
+                const accountInfo = document.createElement('p');
+                accountInfo.innerHTML = `${account.name} <br> ${account.official_name} <br> Balance: ${account.balances.current}`;
+
+                accountBox.appendChild(accountInfo);
+                accountsListEl.appendChild(accountBox);
+            });
+
+            // Show the accounts display area
+            document.getElementById('accounts-display').classList.remove('hidden');
+        }
+
+
+
+        // Handle displaying messages
+        function displayMessage(message, isError = false) {
+            const notificationEl = document.getElementById('notification');
+
+            // Add bell icon and message text to the notification element
+            notificationEl.innerHTML = `<i class="fas fa-bell"></i> ${message}`;
+
+            if (isError) {
+                notificationEl.classList.add('text-red-600', 'bg-red-100');
+            } else {
+                notificationEl.classList.remove('text-red-600', 'bg-red-100');
+                setTimeout(() => {
+                    notificationEl.classList.add('fade-out');
+                    setTimeout(() => {
+                        notificationEl.classList.add('hidden'); // hide the entire notification box after fade-out
+                    }, 1000); // 1 second for the fade-out duration
+                }, 3000); // 3 seconds before starting the fade-out
+            }
+            notificationEl.classList.remove('hidden', 'fade-out'); // Make it visible and reset the fade-out
+        }
+
+
+
+
+        // Plaid Link Code
+        document.getElementById('link-button').addEventListener('click', function () {
+            fetch('/create_link_token', {
+                method: 'POST',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    Plaid.create({
+                        token: data.link_token,
+                        onSuccess: function (public_token, metadata) {
+                            fetch('/exchange_public_token', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ public_token: public_token })
+                            })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.message === 'Public token exchanged and stored successfully') {
+                                        console.log('Token exchanged successfully.');
+                                        displayMessage('Token exchanged successfully.');
+                                        displayAccounts();
+                                    } else {
+                                        console.error('Error exchanging token:', data.error.display_message);
+                                        displayMessage(data.error.display_message, true);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error('Token exchange error:', err);
+                                    displayMessage('Token exchange failed.', true);
+                                });
+                        },
+                        onExit: function (err, metadata) {
+                            if (err) {
+                                console.log('Error:', err);
+                            }
+                            console.log('Exit Metadata:', metadata);
+                        },
+                    }).open();
+                })
+                .catch(err => console.error(err));
+        });
+
+        // Dropdown and Overlay Logic
+        const dropdownButton = document.getElementById('dropdown-button');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        dropdownButton.addEventListener('click', function () {
+            dropdownMenu.classList.toggle('hidden');
+        });
+        displayAccounts(); 
+    </script>
+</body>
+
+</html>
