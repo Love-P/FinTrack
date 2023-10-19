@@ -40,6 +40,18 @@ Before you begin, ensure you have met the following requirements:
 ## Activate & Run:
 
 1. Activate the virtual environment using these commands:
+
    ```bash
    source myenv/bin/activate  # for Linux/Mac
    myenv\Scripts\activate.bat  # for Windows
+
+2. Install the required packages from requirement.txt:
+
+   ```bash
+   pip3 install -r requirements.txt
+
+3. Run the application:
+
+   ```bash
+   python3 app.py
+   #The application will be available on 127.0.0.1:5000/home
