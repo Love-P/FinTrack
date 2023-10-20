@@ -24,6 +24,7 @@ FinTrack is a web application for tracking your financial transactions and manag
 Before you begin, ensure you have met the following requirements:
 
 - Python 3.9.6 installed.
+- [poetry](https://python-poetry.org/)
 - SQLite database (configured in `config.py`).
 - Plaid API credentials (update in `app.py`).
 
@@ -36,16 +37,15 @@ Before you begin, ensure you have met the following requirements:
 
 ## Activate & Run:
 
-1. Activate the virtual environment using these commands:
+1. Activate the virtual environment:
 
    ```bash
-   source myenv/bin/activate  # for Linux/Mac
-   myenv\Scripts\activate.bat  # for Windows
+   poetry shell
 
 2. Install the required packages from requirement.txt:
 
    ```bash
-   pip3 install -r requirements.txt
+   poetry install
 
 3. Run the application:
 
