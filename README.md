@@ -7,9 +7,7 @@ FinTrack is a web application for tracking your financial transactions and manag
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Database](#database)
-- [Routes](#routes)
+- [Activate & Run](#activate&run)
 - [Plaid API Integration](/guides/https://plaid.com/docs/api/)
 
 
