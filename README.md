@@ -23,7 +23,7 @@ FinTrack is a web application for tracking your financial transactions and manag
 
 Before you begin, ensure you have met the following requirements:
 
-- Python 3.9.6 installed.
+- Python 3.11 installed.
 - [poetry](https://python-poetry.org/)
 - SQLite database (configured in `config.py`).
 - Plaid API credentials (update in `app.py`).
